@@ -1,0 +1,67 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>CS4249 Assignment 1</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h1>Instruction!</h1>
+                    <hr>
+                    <p>This experiemnt is to compare the performance of 2 different menus. Marking Menu and Radial Menu. </p>
+                    <p>There will be 240 trials in total during the test. In each trial you will be given a target word. Please selected the corrected word using the promoted menu selction method. </p>
+                    <p>The way to use marking menu and radio menu is as follow: </p>
+                    <p>Marking Menu: </p>
+                    <p>1. Popup: Left Mouse Down hold for 1 second</p>
+                    <p>2. Select: Stroke to leaf node</p>
+                    <p>3. Reset: Release Mouse Down</p>
+                    <p>Note:* Expert user's can make a fast stroke instead of waiting for the manu to pop up.</p>
+
+                    <p>Radial Menu:  </p>
+                    <p>1. Popup: Right Click</p>
+                    <p>2. Select: Left Click</p>
+                    <p>3. Reset: Right Click</p>
+
+                    <p>Please write your participant number ID given by your experimenter. Do not take off your earphone during the entire test. </p>
+                    <form class="form-inline" id="pid-form">
+                        <div class="form-group">
+                            <label for="pid">Participant ID</label>
+                            <input name="pid" type="text" class="form-control" id="pid" placeholder="E.g. P01">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="./js/external/jquery-3.3.1.min.js"></script>
+        <script src="js/utils/DataStorage.js"></script>
+
+        <script>
+            $(function () {
+                $('#pid-form').submit(function (event) {
+                    event.preventDefault();
+                    var pid = $('#pid').val();
+                    if (pid) {
+                        DataStorage.setPID(pid);
+                        console.log("PID: ", pid);
+                        window.location = 'experiment.html';
+                    } else {
+                        alert('Please enter a valid Participant ID (pid)!');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
