@@ -25,12 +25,10 @@ var radialMenuSvg = null;
 var music = document.getElementById("music");
 
 function playAudio() {
-	if(music.paused) {
-		music.play();
-	} else if (music.ended) {
+	if (music.ended) {
 		audio.currentTime = 0;
-		music.play();
 	}
+	music.play();
 }
 
 function pauseAudio() {
