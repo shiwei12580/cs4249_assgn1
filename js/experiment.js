@@ -24,7 +24,6 @@ var tracker = new ExperimentTracker();
 var markingMenuSubscription = null;
 var radialMenuSvg = null;
 
-/*
 var music = document.getElementById("music");
 
 function playAudio() {
@@ -37,7 +36,7 @@ function playAudio() {
 function pauseAudio() {
 	music.pause();
 }
-*/
+
 
 
 
@@ -163,7 +162,9 @@ function nextTrial() {
 		tracker.targetItem = targetItem;
 
 		if(environment === "noisy") {
-
+			playAudio();
+		} else if (environment === "quiet") {
+			pauseAudio(); 
 		}
 
 		if (menuType === "Marking") {
