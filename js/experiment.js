@@ -52,7 +52,7 @@ function getData(relativePath) {
 // Loads the CSV data files on page load and store it to global variables
 function initExperiment() {
 
-  // playAudio();
+  playAudio();
 	// Get Trails
 	var data = getData(trialsFile);
 
