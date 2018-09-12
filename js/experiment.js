@@ -6,6 +6,8 @@ const menuL1File = "./data/menu_depth_1.csv"
 const menuL2File = "./data/menu_depth_2.csv"
 const menuL3File = "./data/menu_depth_3.csv"
 
+const TRIALS_PER_CONDITION = 20;
+
 // Global variables
 var menu;
 var trialsData = [];
@@ -22,11 +24,12 @@ var tracker = new ExperimentTracker();
 var markingMenuSubscription = null;
 var radialMenuSvg = null;
 
+/*
 var music = document.getElementById("music");
 
 function playAudio() {
 	if (music.ended) {
-		audio.currentTime = 0;
+		music.currentTime = 0;
 	}
 	music.play();
 }
@@ -34,6 +37,9 @@ function playAudio() {
 function pauseAudio() {
 	music.pause();
 }
+*/
+
+
 
 
 
@@ -45,15 +51,50 @@ function getData(relativePath) {
 	return xmlHttp.responseText;
 }
 
+const pConfig = JSON.parse(getData("./data/pConfig.json"));
+const targetData = JSON.parse(getData("./data/targetData.json"));
 
+function getTrialData(pid) {
+	var data = pConfig[pid];
+	if(data.length < 12) {
+		console.log("error: pConfig not valid");
+	} else {
+		var ret = [];
+		for(var i=0; i<data.length; i++) {
+			var temp = data[i];
+			var target = targetData[temp.menu_depth];
+			// console.log("target: ", target);
+			for(var j=0; j<target.length; j++) {
+				const d = {"menu_type": temp.menu_type, "menu_depth": temp.menu_depth, "Environment": temp.Environment, "target_item": target[j]};
+				ret.push(d);
+			}
+		}
+		return ret;
+	}
+}
 
 // Loads the CSV data files on page load and store it to global variables
 function initExperiment() {
 
-  playAudio();
 	// Get Trails
-	var data = getData(trialsFile);
+	// var data = getData(trialsFile);
+	var pid = DataStorage.getPID();
+	var data = getTrialData(pid.toLowerCase());
+	// console.log(data);
+	numTrials = data.length;
 
+	for(var i=0; i<numTrials; i++) {
+		trialsData[i+1] = {
+			'Menu Type': data[i].menu_type,
+			'Menu Depth': data[i].menu_depth,
+			'environment': data[i].Environment,
+			'Target Item': data[i].target_item
+		}
+	}
+
+	// console.log(trialsData);
+
+	/*
 	var records = data.split("\n");
 	numTrials = records.length - 1;
 	// console.log("records: ", records);
@@ -70,6 +111,7 @@ function initExperiment() {
 			'Target Item': targetItem
 		};
 	}
+	*/
 
 	// Get Menus
 	var menuL1Data = getData(menuL1File);
@@ -104,11 +146,12 @@ function nextTrial() {
 		var menuType = trialsData[currentTrial]['Menu Type'];
 		var menuDepth = trialsData[currentTrial]['Menu Depth'];
 		var targetItem = trialsData[currentTrial]['Target Item'];
-
+		var environment = trialsData[currentTrial]['environment'];
 		document.getElementById("trialNumber").innerHTML = String(currentTrial) + "/" + String(numTrials);
 		document.getElementById("menuType").innerHTML = menuType;
 		document.getElementById("menuDepth").innerHTML = menuDepth;
 		document.getElementById("targetItem").innerHTML = targetItem;
+		document.getElementById("Environment").innerHTML = environment;
 		document.getElementById("selectedItem").innerHTML = "&nbsp;";
 		// Set IV3 state over here
 
@@ -116,7 +159,12 @@ function nextTrial() {
 		tracker.trial = currentTrial;
 		tracker.menuType = menuType;
 		tracker.menuDepth = menuDepth;
+		tracker.environment = environment
 		tracker.targetItem = targetItem;
+
+		if(environment === "noisy") {
+
+		}
 
 		if (menuType === "Marking") {
 
