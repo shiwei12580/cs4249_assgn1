@@ -6,7 +6,7 @@ const menuL1File = "./data/menu_depth_1.csv"
 const menuL2File = "./data/menu_depth_2.csv"
 const menuL3File = "./data/menu_depth_3.csv"
 
-const TRIALS_PER_CONDITION = 20;
+const TRIALS_PER_CONDITION = 5;
 
 // Global variables
 var menu;
@@ -24,6 +24,7 @@ var tracker = new ExperimentTracker();
 var markingMenuSubscription = null;
 var radialMenuSvg = null;
 
+
 var music = document.getElementById("music");
 
 function playAudio() {
@@ -36,9 +37,6 @@ function playAudio() {
 function pauseAudio() {
 	music.pause();
 }
-
-
-
 
 
 
@@ -63,14 +61,26 @@ function getTrialData(pid) {
 			var temp = data[i];
 			var target = targetData[temp.menu_depth];
 			// console.log("target: ", target);
-			for(var j=0; j<target.length; j++) {
-				const d = {"menu_type": temp.menu_type, "menu_depth": temp.menu_depth, "Environment": temp.Environment, "target_item": target[j]};
+            
+            var randomTarget = getRandomTarget(target); 
+			for(var j=0; j<TRIALS_PER_CONDITION; j++) {
+				const d = {"menu_type": temp.menu_type, "menu_depth": temp.menu_depth, "Environment": temp.Environment, "target_item": randomTarget[j]};
 				ret.push(d);
 			}
 		}
 		return ret;
 	}
 }
+
+function getRandomTarget(targets) {
+    var data = [];
+    for(var i=0; i<TRIALS_PER_CONDITION; i++) {
+        var length = targets.length; 
+        var index = Math.floor(Math.random() * length) % length; 
+        data.push(targets[index]);  
+    }
+    return data; 
+}    
 
 // Loads the CSV data files on page load and store it to global variables
 function initExperiment() {
@@ -161,6 +171,7 @@ function nextTrial() {
 		tracker.environment = environment
 		tracker.targetItem = targetItem;
 
+        
 		if(environment === "noisy") {
 			playAudio();
 		} else if (environment === "quiet") {
